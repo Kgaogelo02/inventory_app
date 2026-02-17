@@ -210,11 +210,4 @@ pip install -r requirements.txt
 
 ---
 
-## 👨‍💻 Author
-
-**Mabutsi Kgaogelo**
-- GitHub: [@Kgaogelo02](https://github.com/Kgaogelo02)
-
----
-
 *Built with Flask and Python*
