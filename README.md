@@ -7,7 +7,7 @@
 ## 📸 Screenshots
 
 ### 👥 Login
-![Login](login/login.png)
+![Login](screenshots/login.png)
 
 ### 🏠 Dashboard
 ![Dashboard](screenshots/dashboard.png)
