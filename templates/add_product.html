@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block title %}Add Product - Mabutsi(IMS){% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1><i class="fas fa-plus-circle"></i> Add New Product</h1>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+</div>
+
+<div class="form-container">
+    <form method="POST" class="product-form">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="name">
+                    <i class="fas fa-tag"></i> Product Name *
+                </label>
+                <input type="text" id="name" name="name" required autofocus placeholder="e.g., Laptop">
+            </div>
+
+            <div class="form-group">
+                <label for="category">
+                    <i class="fas fa-layer-group"></i> Category
+                </label>
+                <input type="text" id="category" name="category" list="categories" placeholder="e.g., Electronics">
+                <datalist id="categories">
+                    <option value="Electronics">
+                    <option value="Clothing">
+                    <option value="Food & Beverage">
+                    <option value="Home & Garden">
+                    <option value="Sports">
+                    <option value="Books">
+                </datalist>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="cost">
+                    <i class="fas fa-coins"></i> Cost Price (R) *
+                </label>
+                <input type="number" id="cost" name="cost" step="0.01" min="0" required placeholder="0.00">
+                <small class="form-text">Amount you paid for the product</small>
+            </div>
+
+            <div class="form-group">
+                <label for="price">
+                    <i class="fas fa-money-bill-wave"></i> Selling Price (R) *
+                </label>
+                <input type="number" id="price" name="price" step="0.01" min="0" required placeholder="0.00">
+                <small class="form-text">Price you will sell to customers</small>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="stock">
+                    <i class="fas fa-boxes"></i> Initial Stock *
+                </label>
+                <input type="number" id="stock" name="stock" min="0" required placeholder="0">
+                <small class="form-text">Number of items in stock</small>
+            </div>
+
+            <div class="form-group">
+                <label for="min_stock">
+                    <i class="fas fa-exclamation-triangle"></i> Minimum Stock Level *
+                </label>
+                <input type="number" id="min_stock" name="min_stock" min="0" value="5" required placeholder="5">
+                <small class="form-text">Alert when stock falls below this</small>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="supplier_id">
+                <i class="fas fa-truck"></i> Supplier (Optional)
+            </label>
+            <select id="supplier_id" name="supplier_id">
+                <option value="">-- No Supplier --</option>
+                {% for supplier in suppliers %}
+                <option value="{{ supplier[0] }}">{{ supplier[1] }}</option>
+                {% endfor %}
+            </select>
+            {% if not suppliers %}
+            <small class="form-text">
+                No suppliers available. <a href="{{ url_for('add_supplier') }}" target="_blank">Add a supplier</a>
+            </small>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="barcode">
+                <i class="fas fa-barcode"></i> Barcode (Optional)
+            </label>
+            <input type="text" id="barcode" name="barcode" placeholder="e.g., 123456789013">
+            <small class="form-text">Leave empty to skip or enter unique barcode</small>
+        </div>
+
+        <div id="profitInfo" class="product-info-card" style="display: none;">
+            <h3><i class="fas fa-calculator"></i> Profit Calculation</h3>
+            <div class="preview-grid">
+                <div class="preview-item">
+                    <span>Cost Price:</span>
+                    <strong>R <span id="infoCost">0.00</span></strong>
+                </div>
+                <div class="preview-item">
+                    <span>Selling Price:</span>
+                    <strong>R <span id="infoPrice">0.00</span></strong>
+                </div>
+                <div class="preview-item">
+                    <span>Profit per Unit:</span>
+                    <strong>R <span id="infoProfit">0.00</span></strong>
+                </div>
+                <div class="preview-item total">
+                    <span>Profit Margin:</span>
+                    <strong><span id="infoMargin">0</span>%</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-check"></i> Add Product
+            </button>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary btn-lg">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+<script>
+// Real-time profit calculation
+const costInput = document.getElementById('cost');
+const priceInput = document.getElementById('price');
+const profitInfo = document.getElementById('profitInfo');
+
+function calculateProfit() {
+    const cost = parseFloat(costInput.value) || 0;
+    const price = parseFloat(priceInput.value) || 0;
+
+    if (cost > 0 && price > 0) {
+        const profit = price - cost;
+        const margin = ((profit / cost) * 100).toFixed(1);
+
+        document.getElementById('infoCost').textContent = cost.toFixed(2);
+        document.getElementById('infoPrice').textContent = price.toFixed(2);
+        document.getElementById('infoProfit').textContent = profit.toFixed(2);
+        document.getElementById('infoMargin').textContent = margin;
+
+        // Color code the margin
+        const marginElement = document.getElementById('infoMargin').parentElement;
+        if (margin >= 30) {
+            marginElement.style.color = 'var(--success-color)';
+        } else if (margin >= 15) {
+            marginElement.style.color = 'var(--warning-color)';
+        } else {
+            marginElement.style.color = 'var(--danger-color)';
+        }
+
+        profitInfo.style.display = 'block';
+    } else {
+        profitInfo.style.display = 'none';
+    }
+}
+
+costInput.addEventListener('input', calculateProfit);
+priceInput.addEventListener('input', calculateProfit);
+</script>
+
+{% endblock %}

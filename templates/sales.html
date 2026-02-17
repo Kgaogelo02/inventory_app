@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}New Sale - Mabutsi(IMS){% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1><i class="fas fa-shopping-cart"></i> Record New Sale</h1>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+</div>
+
+<div class="form-container">
+    <form method="POST" class="product-form" id="saleForm">
+        <div class="form-group">
+            <label for="product_id">
+                <i class="fas fa-box"></i> Select Product *
+            </label>
+            <select id="product_id" name="product_id" required onchange="updateProductInfo()">
+                <option value="">-- Choose a product --</option>
+                {% for product in products %}
+                <option value="{{ product[0] }}" 
+                        data-price="{{ product[3] }}" 
+                        data-stock="{{ product[4] }}"
+                        data-name="{{ product[1] }}">
+                    {{ product[1] }} (Stock: {{ product[4] }}) - R {{ "%.2f"|format(product[3]) }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div id="productInfo" style="display: none;" class="product-info-card">
+            <h3><i class="fas fa-info-circle"></i> Product Information</h3>
+            <div class="info-grid">
+                <div>
+                    <strong>Product:</strong>
+                    <span id="infoName">-</span>
+                </div>
+                <div>
+                    <strong>Price per Unit:</strong>
+                    <span id="infoPrice">R 0.00</span>
+                </div>
+                <div>
+                    <strong>Available Stock:</strong>
+                    <span id="infoStock">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="quantity">
+                <i class="fas fa-sort-numeric-up"></i> Quantity *
+            </label>
+            <input type="number" id="quantity" name="quantity" min="1" required placeholder="0" oninput="calculateTotal()">
+            <small class="form-text">Number of items to sell</small>
+        </div>
+
+        <div id="salePreview" style="display: none;" class="sale-preview">
+            <h3><i class="fas fa-calculator"></i> Sale Summary</h3>
+            <div class="preview-grid">
+                <div class="preview-item">
+                    <span>Subtotal:</span>
+                    <strong>R <span id="previewTotal">0.00</span></strong>
+                </div>
+                <div class="preview-item total">
+                    <span>Total Amount:</span>
+                    <strong>R <span id="previewFinal">0.00</span></strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-success btn-lg">
+                <i class="fas fa-check-circle"></i> Complete Sale
+            </button>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary btn-lg">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{% if not products %}
+<div class="alert alert-warning">
+    <i class="fas fa-exclamation-triangle"></i>
+    No products available for sale. Please <a href="{{ url_for('add_product') }}">add products</a> first.
+</div>
+{% endif %}
+
+<script>
+function updateProductInfo() {
+    const select = document.getElementById('product_id');
+    const selectedOption = select.options[select.selectedIndex];
+    const productInfo = document.getElementById('productInfo');
+    
+    if (selectedOption.value) {
+        document.getElementById('infoName').textContent = selectedOption.dataset.name;
+        document.getElementById('infoPrice').textContent = 'R ' + parseFloat(selectedOption.dataset.price).toFixed(2);
+        document.getElementById('infoStock').textContent = selectedOption.dataset.stock;
+        productInfo.style.display = 'block';
+        
+        // Reset quantity and preview
+        document.getElementById('quantity').value = '';
+        calculateTotal();
+    } else {
+        productInfo.style.display = 'none';
+        document.getElementById('salePreview').style.display = 'none';
+    }
+}
+
+function calculateTotal() {
+    const select = document.getElementById('product_id');
+    const selectedOption = select.options[select.selectedIndex];
+    const quantity = parseInt(document.getElementById('quantity').value) || 0;
+    const preview = document.getElementById('salePreview');
+    
+    if (selectedOption.value && quantity > 0) {
+        const price = parseFloat(selectedOption.dataset.price);
+        const stock = parseInt(selectedOption.dataset.stock);
+        const total = price * quantity;
+        
+        document.getElementById('previewTotal').textContent = total.toFixed(2);
+        document.getElementById('previewFinal').textContent = total.toFixed(2);
+        preview.style.display = 'block';
+        
+        // Validate stock
+        if (quantity > stock) {
+            preview.className = 'sale-preview error';
+            document.getElementById('previewFinal').parentElement.innerHTML = 
+                '<span style="color: red;">Insufficient stock!</span>';
+        } else {
+            preview.className = 'sale-preview';
+        }
+    } else {
+        preview.style.display = 'none';
+    }
+}
+
+// Validate before submit
+document.getElementById('saleForm').addEventListener('submit', function(e) {
+    const select = document.getElementById('product_id');
+    const selectedOption = select.options[select.selectedIndex];
+    const quantity = parseInt(document.getElementById('quantity').value) || 0;
+    const stock = parseInt(selectedOption.dataset.stock);
+    
+    if (quantity > stock) {
+        e.preventDefault();
+        alert('Error: Quantity exceeds available stock!');
+        return false;
+    }
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Sales History - Mabutsi(IMS){% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1><i class="fas fa-history"></i> Sales History</h1>
+    <div class="header-actions">
+        <a href="{{ url_for('export_sales') }}" class="btn btn-primary">
+            <i class="fas fa-download"></i> Export(to CSV)
+        </a>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+    </div>
+</div>
+
+<div class="table-container">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Sale ID</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Total Amount</th>
+                <th>Date and Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sale in sales %}
+            <tr>
+                <td>#{{ sale[0] }}</td>
+                <td><strong>{{ sale[1] }}</strong></td>
+                <td>{{ sale[2] }} units</td>
+                <td class="text-success"><strong>R {{ "%.2f"|format(sale[3]) }}</strong></td>
+                <td>
+                    <i class="fas fa-clock"></i>
+                    {{ sale[4] }}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" class="text-center">
+                    No sales recorded yet. <a href="{{ url_for('add_sale') }}">Make your first sale</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if sales %}
+<div class="pagination-info">
+    Showing last 100 sales
+</div>
+{% endif %}
+
+{% endblock %}

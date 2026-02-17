@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Suppliers - Inventory Management System{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1><i class="fas fa-truck"></i> Suppliers Management</h1>
+    <div class="header-actions">
+        <a href="{{ url_for('add_supplier') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add Supplier
+        </a>
+    </div>
+</div>
+
+<div class="stats-grid stats-grid-2">
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-truck"></i>
+        </div>
+        <div class="stat-details">
+            <h3>{{ suppliers|length }}</h3>
+            <p>Total Suppliers</p>
+        </div>
+    </div>
+</div>
+
+<div class="section-header">
+    <h2><i class="fas fa-list"></i> Supplier Directory</h2>
+</div>
+
+<div class="table-container">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Company Name</th>
+                <th>Contact Person</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for supplier in suppliers %}
+            <tr>
+                <td>#{{ supplier[0] }}</td>
+                <td><strong>{{ supplier[1] }}</strong></td>
+                <td>{{ supplier[2] if supplier[2] else '-' }}</td>
+                <td>
+                    {% if supplier[3] %}
+                    <a href="mailto:{{ supplier[3] }}" class="text-primary">
+                        <i class="fas fa-envelope"></i> {{ supplier[3] }}
+                    </a>
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+                <td>
+                    {% if supplier[4] %}
+                    <i class="fas fa-phone"></i> {{ supplier[4] }}
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+                <td>{{ supplier[5] if supplier[5] else '-' }}</td>
+                <td class="actions">
+                    <a href="{{ url_for('edit_supplier', supplier_id=supplier[0]) }}" 
+                       class="btn btn-sm btn-primary" title="Edit">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{{ url_for('delete_supplier', supplier_id=supplier[0]) }}" 
+                       class="btn btn-sm btn-danger" 
+                       onclick="return confirm('Delete this supplier? This cannot be undone!')"
+                       title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="7" class="text-center">
+                    No suppliers added yet. <a href="{{ url_for('add_supplier') }}">Add your first supplier</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

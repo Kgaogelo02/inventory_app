@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mabutsi(Inventory Management System){% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    {% if session.user_id %}
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-boxes"></i>
+                <span>Mabutsi(IMS)</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">
+                    <i class="fas fa-home"></i> <span>Dashboard</span>
+                </a></li>
+                <li><a href="{{ url_for('add_product') }}" class="{% if request.endpoint == 'add_product' %}active{% endif %}">
+                    <i class="fas fa-plus-circle"></i> <span>Add Product</span>
+                </a></li>
+                <li><a href="{{ url_for('add_sale') }}" class="{% if request.endpoint == 'add_sale' %}active{% endif %}">
+                    <i class="fas fa-shopping-cart"></i> <span>New Sale</span>
+                </a></li>
+                <li><a href="{{ url_for('stock_alerts') }}" class="{% if request.endpoint == 'stock_alerts' %}active{% endif %}">
+                    <i class="fas fa-bell"></i> <span>Stock Alerts</span>
+                </a></li>
+                <li><a href="{{ url_for('suppliers') }}" class="{% if request.endpoint in ['suppliers', 'add_supplier', 'edit_supplier'] %}active{% endif %}">
+                    <i class="fas fa-truck"></i> <span>Suppliers</span>
+                </a></li>
+                <li><a href="{{ url_for('purchase_orders') }}" class="{% if request.endpoint in ['purchase_orders', 'create_purchase_order'] %}active{% endif %}">
+                    <i class="fas fa-file-invoice"></i> <span>Orders</span>
+                </a></li>
+                <li><a href="{{ url_for('sales_history') }}" class="{% if request.endpoint == 'sales_history' %}active{% endif %}">
+                    <i class="fas fa-history"></i> <span>History</span>
+                </a></li>
+                <li><a href="{{ url_for('analytics') }}" class="{% if request.endpoint == 'analytics' %}active{% endif %}">
+                    <i class="fas fa-chart-line"></i> <span>Analytics</span>
+                </a></li>
+            </ul>
+            <div class="nav-user">
+                <span class="user-name">
+                    <i class="fas fa-user"></i> {{ session.username }}
+                </span>
+                <a href="{{ url_for('logout') }}" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+    {% endif %}
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'error' %}exclamation-circle{% elif category == 'warning' %}exclamation-triangle{% else %}info-circle{% endif %}"></i>
+                    {{ message }}
+                    <button class="alert-close" onclick="this.parentElement.remove()">×</button>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

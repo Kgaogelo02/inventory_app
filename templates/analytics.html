@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics - Mabutsi(IMS){% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1><i class="fas fa-chart-line"></i> Sales Analytics</h1>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+</div>
+
+<div class="analytics-grid">
+    <div class="chart-card">
+        <h3><i class="fas fa-chart-area"></i> Sales Revenue (Last 7 Days)</h3>
+        <canvas id="salesChart"></canvas>
+    </div>
+
+    <div class="chart-card">
+        <h3><i class="fas fa-chart-bar"></i> Top 5 Products by Sales Volume</h3>
+        <canvas id="productsChart"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+// Sales Revenue Chart
+fetch('/api/sales_chart')
+    .then(response => response.json())
+    .then(data => {
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.dates,
+                datasets: [{
+                    label: 'Revenue (R)',
+                    data: data.revenues,
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(55, 159, 159, 0.2)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'Revenue: R ' + context.parsed.y.toFixed(2);
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return 'R ' + value;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+
+// Top Products Chart
+fetch('/api/top_products')
+    .then(response => response.json())
+    .then(data => {
+        const ctx = document.getElementById('productsChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.products,
+                datasets: [{
+                    label: 'Units Sold',
+                    data: data.quantities,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.7)',
+                        'rgba(54, 162, 235, 0.7)',
+                        'rgba(255, 206, 86, 0.7)',
+                        'rgba(75, 192, 192, 0.7)',
+                        'rgba(153, 102, 255, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+{% endblock %}
