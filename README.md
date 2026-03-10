@@ -1,57 +1,57 @@
-# 📦 inventory_app
+#  inventory_app
 
 > A full-featured inventory management system built with Python and Flask. Manage products, track sales, handle suppliers, create purchase orders, and monitor stock levels — all from one clean dashboard.
 
 ---
 
-## 📸 Screenshots
+##  Screenshots
 
-### 👥 Login
+### Login
 ![Login](screenshots/login.png)
 
-### 🏠 Dashboard
+### Dashboard
 ![Dashboard](screenshots/dashboard.png)
 
-### ➕ Add Product
+### Add Product
 ![Add Product](screenshots/add-product.png)
 
-### 🛒 New Sale
+### New Sale
 ![New Sale](screenshots/new-sale.png)
 
-### 📜 Sales History
+### Sales History
 ![Sales History](screenshots/sales-history.png)
 
-### 🚚 Suppliers
+### Suppliers
 ![Suppliers](screenshots/suppliers.png)
 
-### 📋 Purchase Orders
+### Purchase Orders
 ![Purchase Orders](screenshots/purchase-orders.png)
 
-### 🔔 Stock Alerts
+### Stock Alerts
 ![Stock Alerts](screenshots/stock-alerts.png)
 
-### 📊 Analytics
+### Analytics
 ![Analytics](screenshots/analytics.png)
 
 ---
 
-## ✨ Features
+## Features
 
-- 🔐 **User Authentication** — Login, register, change password
-- 📊 **Live Dashboard** — Total products, revenue, profit, and today's performance
-- 📦 **Product Management** — Add, edit, delete products with categories and barcodes
-- 🛒 **Sales Recording** — Record sales with automatic stock deduction
-- 🚚 **Suppliers** — Store supplier contact details and link them to products
-- 📋 **Purchase Orders** — Create orders, track status, auto-update stock on receipt
-- 🔔 **Stock Alerts** — Automatic low-stock warnings with reorder recommendations
-- 📈 **Analytics** — 7-day revenue chart and top 5 products chart
-- 💾 **CSV Export** — Export inventory and sales reports
-- 🌍 **South African Time (SAST)** — All timestamps in UTC+2
-- 📱 **Responsive Design** — Works on mobile, tablet, and desktop
+-  **User Authentication** — Login, register, change password
+-  **Live Dashboard** — Total products, revenue, profit, and today's performance
+-  **Product Management** — Add, edit, delete products with categories and barcodes
+-  **Sales Recording** — Record sales with automatic stock deduction
+-  **Suppliers** — Store supplier contact details and link them to products
+-  **Purchase Orders** — Create orders, track status, auto-update stock on receipt
+-  **Stock Alerts** — Automatic low-stock warnings with reorder recommendations
+-  **Analytics** — 7-day revenue chart and top 5 products chart
+-  **CSV Export** — Export inventory and sales reports
+-  **South African Time (SAST)** — All timestamps in UTC+2
+-  **Responsive Design** — Works on mobile, tablet, and desktop
 
 ---
 
-## 🛠️ Built With
+## Built With
 
 | Technology | Purpose |
 |-----------|---------|
@@ -67,7 +67,7 @@
 
 ---
 
-## 🗄️ Database Structure
+## Database Structure
 
 Six tables working together:
 
@@ -82,7 +82,7 @@ stock_alerts    — product, threshold, active status
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 inventory_app/
@@ -117,7 +117,7 @@ inventory_app/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Requirements
 - Python 3.8 or higher
@@ -158,7 +158,7 @@ Password: Mabutsi@12
 
 ---
 
-## 🔐 Security
+## Security
 
 - Passwords hashed with **Werkzeug PBKDF2 SHA256** — never stored in plain text
 - **Session-based authentication** with Flask secure sessions
@@ -168,7 +168,7 @@ Password: Mabutsi@12
 
 ---
 
-## 📱 Responsive Design
+## Responsive Design
 
 | Screen Size | Layout |
 |------------|--------|
@@ -178,7 +178,7 @@ Password: Mabutsi@12
 
 ---
 
-## 📊 Pages Overview
+## Pages Overview
 
 | Page | URL | What It Does |
 |------|-----|-------------|
@@ -197,7 +197,7 @@ Password: Mabutsi@12
 
 ---
 
-## ⚙️ Troubleshooting
+## Troubleshooting
 
 **`no such table: users`**
 ```bash
